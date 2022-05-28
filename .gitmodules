@@ -1,0 +1,6 @@
+[submodule "application-library/ili9341-lcd"]
+	path = application-library/ili9341-lcd
+	url = git@github.com:luyaohan1001/ili9341-lcd.git
+[submodule "application-library/nrf24"]
+	path = application-library/nrf24
+	url = git@github.com:luyaohan1001/nrf24.git
