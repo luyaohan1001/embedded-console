@@ -1,4 +1,4 @@
-# A repository for embedded console integrating wireless capability and LCD display.
+# Embedded Console is a device that allows easy control of IoT smart furnitures.
 
 TODO:
 	1. FreeRTOS (CMSIS)
