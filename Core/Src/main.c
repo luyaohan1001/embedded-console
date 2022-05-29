@@ -41,19 +41,19 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- UART_HandleTypeDef huart2;
+UART_HandleTypeDef huart2;
 
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
 uint8_t cdc_buffer[64];
+extern char lcd_string[128];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
-static void MX_USB_OTG_FS_PCD_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -92,18 +92,17 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-  
-  usb_device_init(); /* MX_USB_DEVICE_Init() */
 
   /* USER CODE BEGIN 2 */
-  /*
+  usb_device_init(); 
+
   ili9341_init();
 
   uint8_t id4[4];
   ili9341_get_id4(id4);
   uint8_t id2[2];
   ili9341_get_id3(id2);
-  lcd_set_rotation(3);
+  lcd_set_rotation(0);
   ili9341_set_CTRL_display();
   ili9341_set_display_brightness();
   uint8_t brightness[2];
@@ -120,52 +119,50 @@ int main(void)
   uint8_t display_signal_mode[2];
   ili9341_get_display_signal_mode(display_signal_mode);
   
-
-  
   // nRF24_tx_self_test();
 
-  lcd_clear_all(0xFFFF);
+  lcd_clear_all(WHITE);
+  /*
 	char message[64] = "> Hello. My Name is Luyao Han. Great to meet you!";
-	lcd_write_message(message, 0, 10, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 10, 1, BLUE, WHITE);
 	strcpy(message, "> What's your name?");
-	lcd_write_message(message, 0, 20, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 20, 1, BLUE, WHITE);
 	strcpy(message, "Some say the world will end in fire,");
-	lcd_write_message(message, 0, 30, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 30, 1, BLUE, WHITE);
   strcpy(message, "Some say in ice.");
-	lcd_write_message(message, 0, 40, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 40, 1, BLUE, WHITE);
   strcpy(message, "From what Ive tasted of desire");
-	lcd_write_message(message, 0, 50, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 50, 1, BLUE, WHITE);
   strcpy(message, "I hold with those who favour fire.");
-	lcd_write_message(message, 0, 60, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 60, 1, BLUE, WHITE);
   strcpy(message, "But if it had to perish twice,");
-	lcd_write_message(message, 0, 70, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 70, 1, BLUE, WHITE);
   strcpy(message, "I think I know enough of hate");
-	lcd_write_message(message, 0, 80, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 80, 1, BLUE, WHITE);
   strcpy(message, "To say that for destruction ice");
-	lcd_write_message(message, 0, 90, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 90, 1, BLUE, WHITE);
   strcpy(message, "Is also great");
-	lcd_write_message(message, 0, 100, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 100, 1, BLUE, WHITE);
   strcpy(message, "And would suffice.");
-	lcd_write_message(message, 0, 110, 1, 0x001F, 0xFFFF);
+	lcd_write_message(message, 0, 110, 1, BLUE, WHITE);
   */
 
-
   uint8_t buffer[] = "Hello, World!\r\n";
-  // MX_USB_DEVICE_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int i = 0;
   
 
+  // lcd_enter_vertical_scroll_mode(); 
   while (1)
   {
-  // CDC_Transmit_FS(buffer, sizeof(buffer));
+    // CDC_Transmit_FS(buffer, sizeof(buffer));
+    
     usbd_transmit(buffer, sizeof(buffer));
-    HAL_Delay(100);
-  // sprintf(message, "%d", i);
-	// lcd_write_message(message, 0, 150, 1, 0x001F, 0xFFFF);
+    // lcd_continuous_scroll();
+    HAL_Delay(1000);
+	  lcd_write_message(lcd_string, 0, 0, 1, BLUE, WHITE);
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }
@@ -247,41 +244,6 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE BEGIN USART2_Init 2 */
 
   /* USER CODE END USART2_Init 2 */
-
-}
-
-/**
-  * @brief USB_OTG_FS Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USB_OTG_FS_PCD_Init(void)
-{
-
-  /* USER CODE BEGIN USB_OTG_FS_Init 0 */
-
-  /* USER CODE END USB_OTG_FS_Init 0 */
-
-  /* USER CODE BEGIN USB_OTG_FS_Init 1 */
-
-  /* USER CODE END USB_OTG_FS_Init 1 */
-  hpcd_USB_OTG_FS.Instance = USB_OTG_FS;
-  hpcd_USB_OTG_FS.Init.dev_endpoints = 4;
-  hpcd_USB_OTG_FS.Init.speed = PCD_SPEED_FULL;
-  hpcd_USB_OTG_FS.Init.dma_enable = DISABLE;
-  hpcd_USB_OTG_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
-  hpcd_USB_OTG_FS.Init.Sof_enable = DISABLE;
-  hpcd_USB_OTG_FS.Init.low_power_enable = DISABLE;
-  hpcd_USB_OTG_FS.Init.lpm_enable = DISABLE;
-  hpcd_USB_OTG_FS.Init.vbus_sensing_enable = DISABLE;
-  hpcd_USB_OTG_FS.Init.use_dedicated_ep1 = DISABLE;
-  if (HAL_PCD_Init(&hpcd_USB_OTG_FS) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USB_OTG_FS_Init 2 */
-
-  /* USER CODE END USB_OTG_FS_Init 2 */
 
 }
 

@@ -11,50 +11,16 @@
 #include <string.h>
 
 
-#ifndef __USBD_DEF_H
-#define __USBD_DEF_H
-
-
-/* usbd_def.h BEGIN ---- ---- ---- ---- */
-#ifndef NULL
-#define NULL                                            0U
-#endif /* NULL */
-
-#ifndef USBD_MAX_NUM_INTERFACES
+/* Macro define ------------------------------------------------------------------*/
 #define USBD_MAX_NUM_INTERFACES                         1U
-#endif /* USBD_MAX_NUM_CONFIGURATION */
-
-#ifndef USBD_MAX_NUM_CONFIGURATION
 #define USBD_MAX_NUM_CONFIGURATION                      1U
-#endif /* USBD_MAX_NUM_CONFIGURATION */
-
-#ifndef USBD_MAX_CLASS_ENDPOINTS
-#define USBD_MAX_CLASS_ENDPOINTS                       5U
-#endif /* USBD_MAX_CLASS_ENDPOINTS */
-
-#ifndef USBD_MAX_CLASS_INTERFACES
-#define USBD_MAX_CLASS_INTERFACES                      5U
-#endif /* USBD_MAX_CLASS_INTERFACES */
-
-#ifndef USBD_LPM_ENABLED
+#define USBD_MAX_CLASS_ENDPOINTS                        5U
+#define USBD_MAX_CLASS_INTERFACES                       5U
 #define USBD_LPM_ENABLED                                0U
-#endif /* USBD_LPM_ENABLED */
-
-#ifndef USBD_SELF_POWERED
 #define USBD_SELF_POWERED                               1U
-#endif /*USBD_SELF_POWERED */
-
-#ifndef USBD_MAX_POWER
 #define USBD_MAX_POWER                                  0x32U /* 100 mA */
-#endif /* USBD_MAX_POWER */
-
-#ifndef USBD_SUPPORT_USER_STRING_DESC
 #define USBD_SUPPORT_USER_STRING_DESC                   0U
-#endif /* USBD_SUPPORT_USER_STRING_DESC */
-
-#ifndef USBD_CLASS_USER_STRING_DESC
 #define USBD_CLASS_USER_STRING_DESC                     0U
-#endif /* USBD_CLASS_USER_STRING_DESC */
 
 #define  USB_LEN_DEV_QUALIFIER_DESC                     0x0AU
 #define  USB_LEN_DEV_DESC                               0x12U
@@ -128,7 +94,6 @@
 #define USBD_STATE_CONFIGURED                           0x03U
 #define USBD_STATE_SUSPENDED                            0x04U
 
-
 /*  EP0 State */
 #define USBD_EP0_IDLE                                   0x00U
 #define USBD_EP0_SETUP                                  0x01U
@@ -143,14 +108,74 @@
 #define USBD_EP_TYPE_BULK                               0x02U
 #define USBD_EP_TYPE_INTR                               0x03U
 
-#ifdef USE_USBD_COMPOSITE
-#define USBD_EP_IN                                      0x80U
-#define USBD_EP_OUT                                     0x00U
-#define USBD_FUNC_DESCRIPTOR_TYPE                       0x24U
-#define USBD_DESC_SUBTYPE_ACM                           0x0FU
-#define USBD_DESC_ECM_BCD_LOW                           0x00U
-#define USBD_DESC_ECM_BCD_HIGH                          0x10U
-#endif /* USE_USBD_COMPOSITE */
+#define LOBYTE(x)  ((uint8_t)((x) & 0x00FFU))
+#define HIBYTE(x)  ((uint8_t)(((x) & 0xFF00U) >> 8U))
+#define MIN(a, b)  (((a) < (b)) ? (a) : (b))
+#define MAX(a, b)  (((a) > (b)) ? (a) : (b))
+
+#define USBD_SOF          USBD_LL_SOF
+/* Define size for the receive and transmit buffer over CDC */
+#define APP_RX_DATA_SIZE  2048
+#define APP_TX_DATA_SIZE  2048
+
+#define CDC_IN_EP                                   0x81U  /* EP1 for data IN */
+#define CDC_OUT_EP                                  0x01U  /* EP1 for data OUT */
+#define CDC_CMD_EP                                  0x82U  /* EP2 for CDC commands */
+
+#define CDC_HS_BINTERVAL                            0x10U
+#define CDC_FS_BINTERVAL                            0x10U
+
+/* CDC Endpoints parameters: you can fine tune these values depending on the needed baudrates and performance. */
+#define CDC_DATA_HS_MAX_PACKET_SIZE                 512U  /* Endpoint IN & OUT Packet size */
+#define CDC_DATA_FS_MAX_PACKET_SIZE                 64U  /* Endpoint IN & OUT Packet size */
+#define CDC_CMD_PACKET_SIZE                         8U  /* Control Endpoint Packet size */
+
+#define USB_CDC_CONFIG_DESC_SIZ                     67U
+#define CDC_DATA_HS_IN_PACKET_SIZE                  CDC_DATA_HS_MAX_PACKET_SIZE
+#define CDC_DATA_HS_OUT_PACKET_SIZE                 CDC_DATA_HS_MAX_PACKET_SIZE
+
+#define CDC_DATA_FS_IN_PACKET_SIZE                  CDC_DATA_FS_MAX_PACKET_SIZE
+#define CDC_DATA_FS_OUT_PACKET_SIZE                 CDC_DATA_FS_MAX_PACKET_SIZE
+
+#define CDC_REQ_MAX_DATA_SIZE                       0x7U
+/*---------------------------------------------------------------------*/
+/*  CDC definitions                                                    */
+/*---------------------------------------------------------------------*/
+#define CDC_SEND_ENCAPSULATED_COMMAND               0x00U
+#define CDC_GET_ENCAPSULATED_RESPONSE               0x01U
+#define CDC_SET_COMM_FEATURE                        0x02U
+#define CDC_GET_COMM_FEATURE                        0x03U
+#define CDC_CLEAR_COMM_FEATURE                      0x04U
+#define CDC_SET_LINE_CODING                         0x20U
+#define CDC_GET_LINE_CODING                         0x21U
+#define CDC_SET_CONTROL_LINE_STATE                  0x22U
+#define CDC_SEND_BREAK                              0x23U
+
+#define USBD_CDC_CLASS &USBD_CDC
+
+
+#define USBD_MAX_NUM_INTERFACES     1U
+#define USBD_MAX_NUM_CONFIGURATION     1U
+#define USBD_MAX_STR_DESC_SIZ     512U
+#define USBD_DEBUG_LEVEL     0U
+#define USBD_LPM_ENABLED     0U
+#define USBD_SELF_POWERED     1U
+
+#define DEVICE_FS 		0
+#define DEVICE_HS 		1
+
+#define         DEVICE_ID1          (UID_BASE)
+#define         DEVICE_ID2          (UID_BASE + 0x4)
+#define         DEVICE_ID3          (UID_BASE + 0x8)
+
+#define  USB_SIZ_STRING_SERIAL       0x1A
+
+#define         DEVICE_ID1          (UID_BASE)
+#define         DEVICE_ID2          (UID_BASE + 0x4)
+#define         DEVICE_ID3          (UID_BASE + 0x8)
+
+#define  USB_SIZ_STRING_SERIAL       0x1A
+
 
 typedef  struct  usb_setup_req
 {
@@ -252,12 +277,6 @@ typedef struct
   uint8_t *(*GetSerialStrDescriptor)(USBD_SpeedTypeDef speed, uint16_t *length);
   uint8_t *(*GetConfigurationStrDescriptor)(USBD_SpeedTypeDef speed, uint16_t *length);
   uint8_t *(*GetInterfaceStrDescriptor)(USBD_SpeedTypeDef speed, uint16_t *length);
-#if (USBD_CLASS_USER_STRING_DESC == 1)
-  uint8_t *(*GetUserStrDescriptor)(USBD_SpeedTypeDef speed, uint8_t idx, uint16_t *length);
-#endif /* USBD_CLASS_USER_STRING_DESC */
-#if ((USBD_LPM_ENABLED == 1U) || (USBD_CLASS_BOS_ENABLED == 1))
-  uint8_t *(*GetBOSDescriptor)(USBD_SpeedTypeDef speed, uint16_t *length);
-#endif /* (USBD_LPM_ENABLED == 1U) || (USBD_CLASS_BOS_ENABLED == 1) */
 } USBD_DescriptorsTypeDef;
 
 /* USB Device handle structure */
@@ -270,51 +289,6 @@ typedef struct
   uint16_t is_used;
   uint16_t bInterval;
 } USBD_EndpointTypeDef;
-
-#ifdef USE_USBD_COMPOSITE
-typedef enum
-{
-  CLASS_TYPE_NONE    = 0,
-  CLASS_TYPE_HID     = 1,
-  CLASS_TYPE_CDC     = 2,
-  CLASS_TYPE_MSC     = 3,
-  CLASS_TYPE_DFU     = 4,
-  CLASS_TYPE_CHID    = 5,
-  CLASS_TYPE_AUDIO   = 6,
-  CLASS_TYPE_ECM     = 7,
-  CLASS_TYPE_RNDIS   = 8,
-  CLASS_TYPE_MTP     = 9,
-  CLASS_TYPE_VIDEO   = 10,
-  CLASS_TYPE_PRINTER = 11,
-  CLASS_TYPE_CCID    = 12,
-} USBD_CompositeClassTypeDef;
-
-
-/* USB Device handle structure */
-typedef struct
-{
-  uint8_t                     add;
-  uint8_t                     type;
-  uint8_t                     size;
-  uint8_t                     is_used;
-} USBD_EPTypeDef;
-
-/* USB Device handle structure */
-typedef struct
-{
-  USBD_CompositeClassTypeDef   ClassType;
-  uint32_t                     ClassId;
-  uint32_t                     Active;
-  uint32_t                     NumEps;
-  USBD_EPTypeDef               Eps[USBD_MAX_CLASS_ENDPOINTS];
-  uint8_t                      *EpAdd;
-  uint32_t                     NumIf;
-  uint8_t                      Ifs[USBD_MAX_CLASS_INTERFACES];
-  uint32_t                     CurrPcktSze;
-} USBD_CompositeElementTypeDef;
-#endif /* USE_USBD_COMPOSITE */
-
-
 
 /* USB Device handle structure */
 typedef struct _USBD_Handle_t
@@ -376,114 +350,6 @@ __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
   return _SwapVal;
 }
 
-
-#ifndef LOBYTE
-#define LOBYTE(x)  ((uint8_t)((x) & 0x00FFU))
-#endif /* LOBYTE */
-
-#ifndef HIBYTE
-#define HIBYTE(x)  ((uint8_t)(((x) & 0xFF00U) >> 8U))
-#endif /* HIBYTE */
-
-#ifndef MIN
-#define MIN(a, b)  (((a) < (b)) ? (a) : (b))
-#endif /* MIN */
-
-#ifndef MAX
-#define MAX(a, b)  (((a) > (b)) ? (a) : (b))
-#endif /* MAX */
-
-#if  defined ( __GNUC__ )
-#ifndef __weak
-#define __weak   __attribute__((weak))
-#endif /* __weak */
-#ifndef __packed
-#define __packed __attribute__((__packed__))
-#endif /* __packed */
-#endif /* __GNUC__ */
-
-
-/* In HS mode and when the DMA is used, all variables and data structures dealing
-   with the DMA during the transaction process should be 4-bytes aligned */
-
-#if defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
-#ifndef __ALIGN_END
-#define __ALIGN_END    __attribute__ ((aligned (4U)))
-#endif /* __ALIGN_END */
-#ifndef __ALIGN_BEGIN
-#define __ALIGN_BEGIN
-#endif /* __ALIGN_BEGIN */
-#else
-#ifndef __ALIGN_END
-#define __ALIGN_END
-#endif /* __ALIGN_END */
-#ifndef __ALIGN_BEGIN
-#if defined   (__CC_ARM)      /* ARM Compiler */
-#define __ALIGN_BEGIN    __align(4U)
-#elif defined (__ICCARM__)    /* IAR Compiler */
-#define __ALIGN_BEGIN
-#endif /* __CC_ARM */
-#endif /* __ALIGN_BEGIN */
-#endif /* __GNUC__ */
-
-
-#endif /* __USBD_DEF_H */
-
-
-/* Macro define ------------------------------------------------------------------*/
-#define USBD_SOF          USBD_LL_SOF
-/* Define size for the receive and transmit buffer over CDC */
-#define APP_RX_DATA_SIZE  2048
-#define APP_TX_DATA_SIZE  2048
-
-#ifndef CDC_IN_EP
-#define CDC_IN_EP                                   0x81U  /* EP1 for data IN */
-#endif /* CDC_IN_EP */
-#ifndef CDC_OUT_EP
-#define CDC_OUT_EP                                  0x01U  /* EP1 for data OUT */
-#endif /* CDC_OUT_EP */
-#ifndef CDC_CMD_EP
-#define CDC_CMD_EP                                  0x82U  /* EP2 for CDC commands */
-#endif /* CDC_CMD_EP  */
-
-#ifndef CDC_HS_BINTERVAL
-#define CDC_HS_BINTERVAL                            0x10U
-#endif /* CDC_HS_BINTERVAL */
-
-#ifndef CDC_FS_BINTERVAL
-#define CDC_FS_BINTERVAL                            0x10U
-#endif /* CDC_FS_BINTERVAL */
-
-/* CDC Endpoints parameters: you can fine tune these values depending on the needed baudrates and performance. */
-#define CDC_DATA_HS_MAX_PACKET_SIZE                 512U  /* Endpoint IN & OUT Packet size */
-#define CDC_DATA_FS_MAX_PACKET_SIZE                 64U  /* Endpoint IN & OUT Packet size */
-#define CDC_CMD_PACKET_SIZE                         8U  /* Control Endpoint Packet size */
-
-#define USB_CDC_CONFIG_DESC_SIZ                     67U
-#define CDC_DATA_HS_IN_PACKET_SIZE                  CDC_DATA_HS_MAX_PACKET_SIZE
-#define CDC_DATA_HS_OUT_PACKET_SIZE                 CDC_DATA_HS_MAX_PACKET_SIZE
-
-#define CDC_DATA_FS_IN_PACKET_SIZE                  CDC_DATA_FS_MAX_PACKET_SIZE
-#define CDC_DATA_FS_OUT_PACKET_SIZE                 CDC_DATA_FS_MAX_PACKET_SIZE
-
-#define CDC_REQ_MAX_DATA_SIZE                       0x7U
-/*---------------------------------------------------------------------*/
-/*  CDC definitions                                                    */
-/*---------------------------------------------------------------------*/
-#define CDC_SEND_ENCAPSULATED_COMMAND               0x00U
-#define CDC_GET_ENCAPSULATED_RESPONSE               0x01U
-#define CDC_SET_COMM_FEATURE                        0x02U
-#define CDC_GET_COMM_FEATURE                        0x03U
-#define CDC_CLEAR_COMM_FEATURE                      0x04U
-#define CDC_SET_LINE_CODING                         0x20U
-#define CDC_GET_LINE_CODING                         0x21U
-#define CDC_SET_CONTROL_LINE_STATE                  0x22U
-#define CDC_SEND_BREAK                              0x23U
-
-#define USBD_CDC_CLASS &USBD_CDC
-
-
-
 /* USB Device handle structure */
 struct USB_Device_Handle
 {
@@ -519,10 +385,9 @@ struct USB_Device_Handle
 
 /** USB Device initialization function. */
 void usb_device_init(void);   // equvilent to  void MX_USB_DEVICE_Init(void)
-/* usb_device.h END ---- ---- ---- ---- ---- ---- ---- ---- */
 
 
-/* usbd_cdc.h END ---- ---- ---- ---- ---- ---- ---- ---- */
+extern USBD_DescriptorsTypeDef FS_Desc;
 typedef struct
 {
   uint32_t bitrate;
@@ -555,45 +420,28 @@ typedef struct
   __IO uint32_t RxState;
 } USBD_CDC_Buffer_t;
 
-extern USBD_ClassTypeDef USBD_CDC;
 
-
-uint8_t USBD_CDC_RegisterInterface(USBD_Handle_t *pdev,
-                                   USBD_CDC_ItfTypeDef *fops);
-
-uint8_t USBD_CDC_SetTxBuffer(USBD_Handle_t *pdev, uint8_t *pbuff,
-                             uint32_t length);
+void USBD_CDC_SetTxBuffer(USBD_Handle_t *pdev, uint8_t *pbuff, uint32_t length);
 
 uint8_t USBD_CDC_SetRxBuffer(USBD_Handle_t *pdev, uint8_t *pbuff);
 uint8_t USBD_CDC_ReceivePacket(USBD_Handle_t *pdev);
 uint8_t USBD_CDC_TransmitPacket(USBD_Handle_t *pdev);
-/* usbd_cdc.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-
-
-/* usbd_core.h BEGIN ---- ---- ---- ---- ---- ---- ---- ---- */
 USBD_StatusTypeDef USBD_Init(USBD_Handle_t *pdev, USBD_DescriptorsTypeDef *pdesc, uint8_t id);
 USBD_StatusTypeDef USBD_DeInit(USBD_Handle_t *pdev);
 USBD_StatusTypeDef USBD_Start(USBD_Handle_t *pdev);
 USBD_StatusTypeDef USBD_Stop(USBD_Handle_t *pdev);
 USBD_StatusTypeDef USBD_RegisterClass(USBD_Handle_t *pdev, USBD_ClassTypeDef *pclass);
-
 uint8_t USBD_CoreFindIF(USBD_Handle_t *pdev, uint8_t index);
 uint8_t USBD_CoreFindEP(USBD_Handle_t *pdev, uint8_t index);
-
 void USBD_SetClassConfig(USBD_Handle_t *pdev, uint8_t cfgidx);
 USBD_StatusTypeDef USBD_ClrClassConfig(USBD_Handle_t *pdev, uint8_t cfgidx);
-
 void USBD_LL_SetupStage(USBD_Handle_t *pdev, uint8_t *psetup);
 USBD_StatusTypeDef USBD_LL_DataOutStage(USBD_Handle_t *pdev, uint8_t epnum, uint8_t *pdata);
-
 USBD_StatusTypeDef USBD_LL_Reset(USBD_Handle_t *pdev);
 USBD_StatusTypeDef USBD_LL_Suspend(USBD_Handle_t *pdev);
 USBD_StatusTypeDef USBD_LL_Resume(USBD_Handle_t *pdev);
-
 USBD_StatusTypeDef USBD_LL_SOF(USBD_Handle_t  *pdev);
 USBD_StatusTypeDef USBD_LL_IsoINIncomplete(USBD_Handle_t *pdev, uint8_t epnum);
-
 USBD_StatusTypeDef USBD_LL_DevConnected(USBD_Handle_t *pdev);
 USBD_StatusTypeDef USBD_LL_DevDisconnected(USBD_Handle_t *pdev);
 
@@ -602,65 +450,26 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_Handle_t *pdev);
 USBD_StatusTypeDef USBD_LL_DeInit(USBD_Handle_t *pdev);
 USBD_StatusTypeDef USBD_LL_Start(USBD_Handle_t *pdev);
 void USBD_LL_Stop(USBD_Handle_t *pdev);
-
-void USBD_LL_OpenEP(USBD_Handle_t *pdev, uint8_t ep_addr,
-                                  uint8_t ep_type, uint16_t ep_mps);
-
+void USBD_LL_OpenEP(USBD_Handle_t *pdev, uint8_t ep_addr, uint8_t ep_type, uint16_t ep_mps);
 void USBD_LL_CloseEP(USBD_Handle_t *pdev, uint8_t ep_addr);
 void USBD_LL_FlushEP(USBD_Handle_t *pdev, uint8_t ep_addr);
 void USBD_LL_StallEP(USBD_Handle_t *pdev, uint8_t ep_addr);
 void USBD_LL_ClearStallEP(USBD_Handle_t *pdev, uint8_t ep_addr);
 void USBD_LL_SetUSBAddress(USBD_Handle_t *pdev, uint8_t dev_addr);
-
-void USBD_LL_Transmit(USBD_Handle_t *pdev, uint8_t ep_addr,
-                                    uint8_t *pbuf, uint32_t size);
-
-void USBD_LL_PrepareReceive(USBD_Handle_t *pdev, uint8_t ep_addr,
-                                          uint8_t *pbuf, uint32_t size);
-
-#ifdef USBD_HS_TESTMODE_ENABLE
-USBD_StatusTypeDef USBD_LL_SetTestMode(USBD_Handle_t *pdev, uint8_t testmode);
-#endif /* USBD_HS_TESTMODE_ENABLE */
-
+void USBD_LL_Transmit(USBD_Handle_t *pdev, uint8_t ep_addr, uint8_t *pbuf, uint32_t size);
+void USBD_LL_PrepareReceive(USBD_Handle_t *pdev, uint8_t ep_addr, uint8_t *pbuf, uint32_t size);
 uint8_t USBD_LL_IsStallEP(USBD_Handle_t *pdev, uint8_t ep_addr);
 uint32_t USBD_LL_GetRxDataSize(USBD_Handle_t *pdev, uint8_t  ep_addr);
-
 void  USBD_LL_Delay(uint32_t Delay);
-
 void *USBD_GetEpDesc(uint8_t *pConfDesc, uint8_t EpAddr);
 USBD_DescHeaderTypeDef *USBD_GetNextDesc(uint8_t *pbuf, uint16_t *ptr);
-
-/* usbd_core.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-/* ---------------------------------------------------------------------------------------*/
-/* Initializes the CDC media low layer over the FS USB IP */
 int8_t CDC_Init_FS(void);
-
-/* @brief  DeInitializes the CDC media low layer */
 int8_t CDC_DeInit_FS(void);
-
-/* @brief  Manage the CDC class requests */
 int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length);
-
-/* @brief  Data received over USB OUT endpoint are sent over CDC interface through this function. */
 int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len);
-
-/* Data to send over USB IN endpoint are sent over CDC interface through this function. */
 void usbd_transmit(uint8_t* Buf, uint16_t Len);
-
-/* CDC_TransmitCplt_FS Data transmitted callback */
 int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum);
-
-/* usbd_cdc_if.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-
-/* usb_device.h BEGIN ---- ---- ---- ---- ---- ---- ---- ---- */
-
-/* Init USB device Library, add supported class and start the library */
 void usb_device_init(void);
-/* usb_device.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-/* usbd_cdc.h START ---- ---- ---- ---- ---- ---- ---- ---- */
 uint8_t USBD_CDC_Init(USBD_Handle_t *pdev, uint8_t cfgidx);
 uint8_t USBD_CDC_DeInit(USBD_Handle_t *pdev, uint8_t cfgidx);
 uint8_t USBD_CDC_Setup(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
@@ -672,328 +481,30 @@ uint8_t *USBD_CDC_GetHSCfgDesc(uint16_t *length);
 uint8_t *USBD_CDC_GetOtherSpeedCfgDesc(uint16_t *length);
 uint8_t *USBD_CDC_GetOtherSpeedCfgDesc(uint16_t *length);
 uint8_t *USBD_CDC_GetDeviceQualifierDescriptor(uint16_t *length);
-
-/**
-  * @brief  Initialize the CDC interface
-  * @param  pdev: device instance
-  * @param  cfgidx: Configuration index
-  * @retval status
-  */
-uint8_t USBD_CDC_Init(USBD_Handle_t *pdev, uint8_t cfgidx);
-
-/**
-  * @brief  USBD_CDC_Init
-  *         DeInitialize the CDC layer
-  * @param  pdev: device instance
-  * @param  cfgidx: Configuration index
-  * @retval status
-  */
-uint8_t USBD_CDC_DeInit(USBD_Handle_t *pdev, uint8_t cfgidx);
-
-/**
-  * @brief  USBD_CDC_Setup
-  *         Handle the CDC specific requests
-  * @param  pdev: instance
-  * @param  req: usb requests
-  * @retval status
-  */
-uint8_t USBD_CDC_Setup(USBD_Handle_t *pdev,
-                              USBD_SetupReqTypedef *req);
-
-/**
-  * @brief  USBD_CDC_DataIn
-  *         Data sent on non-control IN endpoint
-  * @param  pdev: device instance
-  * @param  epnum: endpoint number
-  * @retval status
-  */
-uint8_t USBD_CDC_DataIn(USBD_Handle_t *pdev, uint8_t epnum);
-
-/**
-  * @brief  USBD_CDC_DataOut
-  *         Data received on non-control Out endpoint
-  * @param  pdev: device instance
-  * @param  epnum: endpoint number
-  * @retval status
-  */
-uint8_t USBD_CDC_DataOut(USBD_Handle_t *pdev, uint8_t epnum);
-
-/**
-  * @brief  USBD_CDC_EP0_RxReady
-  *         Handle EP0 Rx Ready event
-  * @param  pdev: device instance
-  * @retval status
-  */
-uint8_t USBD_CDC_EP0_RxReady(USBD_Handle_t *pdev);
-
-/**
-  * @brief  Get configuration descriptor
-  * @param  length : pointer data length
-  * @retval pointer to descriptor buffer
-  */
-uint8_t *USBD_CDC_GetFSCfgDesc(uint16_t *length);
-
-/**
-  * @brief  USBD_CDC_GetHSCfgDesc
-  *         Return configuration descriptor
-  * @param  length : pointer data length
-  * @retval pointer to descriptor buffer
-  */
-uint8_t *USBD_CDC_GetHSCfgDesc(uint16_t *length);
-
-/**
-  * @brief  USBD_CDC_GetOtherSpeedCfgDesc
-  *         Return configuration descriptor
-  * @param  length : pointer data length
-  * @retval pointer to descriptor buffer
-  */
-uint8_t *USBD_CDC_GetOtherSpeedCfgDesc(uint16_t *length);
-
-/**
-  * @brief  USBD_CDC_GetDeviceQualifierDescriptor
-  *         return Device Qualifier descriptor
-  * @param  length : pointer data length
-  * @retval pointer to descriptor buffer
-  */
-uint8_t *USBD_CDC_GetDeviceQualifierDescriptor(uint16_t *length);
-
-/**
-  * @brief  USBD_CDC_RegisterInterface
-  * @param  pdev: device instance
-  * @param  fops: CD  Interface callback
-  * @retval status
-  */
-uint8_t USBD_CDC_RegisterInterface(USBD_Handle_t *pdev,
-                                   USBD_CDC_ItfTypeDef *fops);
-
-/**
-  * @brief  USBD_CDC_SetTxBuffer
-  * @param  pdev: device instance
-  * @param  pbuff: Tx Buffer
-  * @param  length: Tx Buffer length
-  * @retval status
-  */
-uint8_t USBD_CDC_SetTxBuffer(USBD_Handle_t *pdev,
-                             uint8_t *pbuff, uint32_t length);
-
-/**
-  * @brief  USBD_CDC_SetRxBuffer
-  */
+uint8_t USBD_CDC_RegisterInterface(USBD_Handle_t *pdev, USBD_CDC_ItfTypeDef *fops);
 uint8_t USBD_CDC_SetRxBuffer(USBD_Handle_t *pdev, uint8_t *pbuff);
-
-/**
-  */
 uint8_t USBD_CDC_TransmitPacket(USBD_Handle_t *pdev);
-
-/**
-  * @brief  USBD_CDC_ReceivePacket
-  *         prepare OUT Endpoint for reception
-  * @param  pdev: device instance
-  * @retval status
-  */
 uint8_t USBD_CDC_ReceivePacket(USBD_Handle_t *pdev);
-
-/* usbd_cdc.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-
-/* usbd_core.h BEGIN ---- ---- ---- ---- ---- ---- ---- ---- */
-
-/**
-  * @brief  Initializes the device stack and load the class driver
-  * @param  pdev: device instance
-  * @param  pdesc: Descriptor structure address
-  * @param  id: Low level core index
-  * @retval None
-  */
-USBD_StatusTypeDef USBD_Init(USBD_Handle_t *pdev,
-                             USBD_DescriptorsTypeDef *pdesc, uint8_t id);
-
-/**
-  * @brief  USBD_DeInit
-  *         Re-Initialize the device library
-  * @param  pdev: device instance
-  * @retval status: status
-  */
-USBD_StatusTypeDef USBD_DeInit(USBD_Handle_t *pdev);
-
-/**
-  * @brief  USBD_RegisterClass
-  *         Link class driver to Device Core.
-  * @param  pDevice : Device Handle
-  * @param  pclass: Class handle
-  * @retval USBD Status
-  */
-USBD_StatusTypeDef USBD_RegisterClass(USBD_Handle_t *pdev, USBD_ClassTypeDef *pclass);
-
-
-/**
-  * @brief  USBD_Start
-  *         Start the USB Device Core.
-  * @param  pdev: Device Handle
-  * @retval USBD Status
-  */
-USBD_StatusTypeDef USBD_Start(USBD_Handle_t *pdev);
-
-
-/**
-  * @brief  USBD_Stop
-  *         Stop the USB Device Core.
-  * @param  pdev: Device Handle
-  * @retval USBD Status
-  */
-USBD_StatusTypeDef USBD_Stop(USBD_Handle_t *pdev);
-
-
-
-/**
-  * @brief  USBD_ClrClassConfig
-  *         Clear current configuration
-  * @param  pdev: device instance
-  * @param  cfgidx: configuration index
-  * @retval status: USBD_StatusTypeDef
-  */
-USBD_StatusTypeDef USBD_ClrClassConfig(USBD_Handle_t *pdev, uint8_t cfgidx);
-
-
-
-/**
-  * @brief  USBD_LL_DataOutStage
-  *         Handle data OUT stage
-  */
-USBD_StatusTypeDef USBD_LL_DataOutStage(USBD_Handle_t *pdev,
-                                        uint8_t epnum, uint8_t *pdata);
-
-/**
-  * @brief  USBD_LL_DataInStage
-  *         Handle data in stage
-  */
-void USBD_LL_DataInStage(USBD_Handle_t *pdev,
-                                       uint8_t epnum, uint8_t *pdata);
-
-/**
-  * @brief  USBD_LL_Reset
-  *         Handle Reset event
-  */
-
-USBD_StatusTypeDef USBD_LL_Reset(USBD_Handle_t *pdev);
-
-/**
-  * @brief  USBD_LL_SetSpeed
-  *         Handle Reset event
-  * @param  pdev: device instance
-  * @retval None.
-  */
-void USBD_LL_SetSpeed(USBD_Handle_t *pdev,
-                                    USBD_SpeedTypeDef speed);
-
-/**
-  * @brief  Handle Suspend event
-  * @param  pdev: device instance
-  * @retval status
-  */
-
+USBD_StatusTypeDef USBD_Init(USBD_Handle_t *pdev, USBD_DescriptorsTypeDef *pdesc, uint8_t id);
+void USBD_LL_DataInStage(USBD_Handle_t *pdev, uint8_t epnum, uint8_t *pdata);
+void USBD_LL_SetSpeed(USBD_Handle_t *pdev, USBD_SpeedTypeDef speed);
 USBD_StatusTypeDef USBD_LL_Suspend(USBD_Handle_t *pdev);
-
-/**
-  * @brief  USBD_LL_Resume
-  *         Handle Resume event
-  * @param  pdev: device instance
-  * @retval status
-  */
-
 USBD_StatusTypeDef USBD_LL_Resume(USBD_Handle_t *pdev);
-
-/**
-  * @brief  USBD_LL_SOF
-  *         Handle SOF event
-  * @param  pdev: device instance
-  * @retval status
-  */
-
 USBD_StatusTypeDef USBD_LL_SOF(USBD_Handle_t *pdev);
-
-/**
-  * @brief  USBD_LL_IsoINIncomplete
-  *         Handle iso in incomplete event
-  * @param  pdev: device instance
-  * @retval status
-  */
-USBD_StatusTypeDef USBD_LL_IsoINIncomplete(USBD_Handle_t *pdev,
-                                           uint8_t epnum);
-
-/**
-  * @brief  Handle iso out incomplete event.
-  * @param  pdev: device instance
-  * @retval None.
-  */
-void USBD_LL_IsoOUTIncomplete(USBD_Handle_t *pdev,
-                                            uint8_t epnum);
-
-/**
-  * @brief  USBD_LL_DevConnected
-  *         Handle device connection event
-  * @param  pdev: device instance
-  * @retval status
-  */
+USBD_StatusTypeDef USBD_LL_IsoINIncomplete(USBD_Handle_t *pdev, uint8_t epnum);
+void USBD_LL_IsoOUTIncomplete(USBD_Handle_t *pdev, uint8_t epnum);
 USBD_StatusTypeDef USBD_LL_DevConnected(USBD_Handle_t *pdev);
-
-/**
-  * @brief  USBD_LL_DevDisconnected
-  *         Handle device disconnection event
-  * @param  pdev: device instance
-  * @retval status
-  */
 USBD_StatusTypeDef USBD_LL_DevDisconnected(USBD_Handle_t *pdev);
-
-/**
-  * @brief  USBD_CoreFindIF
-  *         return the class index relative to the selected interface
-  * @param  pdev: device instance
-  * @param  index : selected interface number
-  * @retval index of the class using the selected interface number. OxFF if no class found.
-  */
 uint8_t USBD_CoreFindIF(USBD_Handle_t *pdev, uint8_t index);
-
-/**
-  * @brief  Returns the class index relative to the selected endpoint
-  * @param  pdev: device instance
-  * @param  index : selected endpoint number
-  * @retval index of the class using the selected endpoint number. 0xFF if no class found.
-  */
 uint8_t USBD_CoreFindEP(USBD_Handle_t *pdev, uint8_t index);
-
-/**
-  * @brief  Returns the Endpoint descriptor
-  * @param  pdev: device instance
-  * @param  pConfDesc:  pointer to Bos descriptor
-  * @param  EpAddr:  endpoint address
-  * @retval pointer to video endpoint descriptor
-  */
 void *USBD_GetEpDesc(uint8_t *pConfDesc, uint8_t EpAddr);
-
-/**
-  * @brief  Returns the next descriptor header
-  * @param  buf: Buffer where the descriptor is available
-  * @param  ptr: data pointer inside the descriptor
-  * @retval next header
-  */
 USBD_DescHeaderTypeDef *USBD_GetNextDesc(uint8_t *pbuf, uint16_t *ptr);
-
-/* usbd_core.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-
-/* usbd_ctlreq.h BEGIN ---- ---- ---- ---- ---- ---- ---- ---- */
-/* Includes ------------------------------------------------------------------*/
-
 USBD_StatusTypeDef USBD_StdDevReq(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
 USBD_StatusTypeDef USBD_StdItfReq(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
 USBD_StatusTypeDef USBD_StdEPReq(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
-
 void USBD_CtlError(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
 void USBD_ParseSetupRequest(USBD_SetupReqTypedef *req, uint8_t *pdata);
 void USBD_GetString(uint8_t *desc, uint8_t *unicode, uint16_t *len);
-
-
 void USBD_GetDescriptor(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
 void USBD_SetAddress(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
 USBD_StatusTypeDef USBD_SetConfig(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
@@ -1002,105 +513,17 @@ void USBD_GetStatus(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
 void USBD_SetFeature(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
 void USBD_ClrFeature(USBD_Handle_t *pdev, USBD_SetupReqTypedef *req);
 uint8_t USBD_GetLen(uint8_t *buf);
-/* usbd_ctlreq.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-
-/* usbd_ioreq.h BEGIN ---- ---- ---- ---- ---- ---- ---- ---- */
-void USBD_CtlSendData(USBD_Handle_t *pdev,
-                                    uint8_t *pbuf, uint32_t len);
-
-void USBD_CtlContinueSendData(USBD_Handle_t *pdev,
-                                            uint8_t *pbuf, uint32_t len);
-
-void USBD_CtlPrepareRx(USBD_Handle_t *pdev,
-                                     uint8_t *pbuf, uint32_t len);
-
-USBD_StatusTypeDef USBD_CtlContinueRx(USBD_Handle_t *pdev,
-                                      uint8_t *pbuf, uint32_t len);
-
+void USBD_CtlSendData(USBD_Handle_t *pdev, uint8_t *pbuf, uint32_t len);
+void USBD_CtlContinueSendData(USBD_Handle_t *pdev, uint8_t *pbuf, uint32_t len);
+void USBD_CtlPrepareRx(USBD_Handle_t *pdev, uint8_t *pbuf, uint32_t len);
+USBD_StatusTypeDef USBD_CtlContinueRx(USBD_Handle_t *pdev, uint8_t *pbuf, uint32_t len);
 void USBD_CtlSendStatus(USBD_Handle_t *pdev);
 USBD_StatusTypeDef USBD_CtlReceiveStatus(USBD_Handle_t *pdev);
-
 uint32_t USBD_GetRxCount(USBD_Handle_t *pdev, uint8_t ep_addr);
-/* usbd_ioreq.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-
-
-/* usbd_conf.h BEGIN ---- ---- ---- ---- ---- ---- ---- ---- */
-#define USBD_MAX_NUM_INTERFACES     1U
-#define USBD_MAX_NUM_CONFIGURATION     1U
-#define USBD_MAX_STR_DESC_SIZ     512U
-#define USBD_DEBUG_LEVEL     0U
-#define USBD_LPM_ENABLED     0U
-#define USBD_SELF_POWERED     1U
-
-/****************************************/
-/* #define for FS and HS identification */
-#define DEVICE_FS 		0
-#define DEVICE_HS 		1
-
-/* Memory management macros make sure to use static memory allocation */
-/** Alias for memory allocation. */
-
-#define USBD_malloc         (void *)USBD_static_malloc
-
-/** Alias for memory copy. */
-#define USBD_memcpy         memcpy
-
-/** Alias for delay. */
-#define USBD_Delay          HAL_Delay
-
-/* DEBUG macros */
-
-#if (USBD_DEBUG_LEVEL > 0)
-#define USBD_UsrLog(...)    printf(__VA_ARGS__);\
-                            printf("\n");
-#else
-#define USBD_UsrLog(...)
-#endif /* (USBD_DEBUG_LEVEL > 0U) */
-
-#if (USBD_DEBUG_LEVEL > 1)
-
-#define USBD_ErrLog(...)    printf("ERROR: ") ;\
-                            printf(__VA_ARGS__);\
-                            printf("\n");
-#else
-#define USBD_ErrLog(...)
-#endif /* (USBD_DEBUG_LEVEL > 1U) */
-
-#if (USBD_DEBUG_LEVEL > 2)
-#define USBD_DbgLog(...)    printf("DEBUG : ") ;\
-                            printf(__VA_ARGS__);\
-                            printf("\n");
-#else
-#define USBD_DbgLog(...)
-#endif /* (USBD_DEBUG_LEVEL > 2U) */
-
-
 void *USBD_static_malloc(uint32_t size);
 void USBD_static_free(void *p);
-
-/* usbd_conf.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-
-
-/* usbd_desc.h BEGIN ---- ---- ---- ---- ---- ---- ---- ---- */
-#define         DEVICE_ID1          (UID_BASE)
-#define         DEVICE_ID2          (UID_BASE + 0x4)
-#define         DEVICE_ID3          (UID_BASE + 0x8)
-
-#define  USB_SIZ_STRING_SERIAL       0x1A
-
-/** Descriptor for the Usb device. */
-extern USBD_DescriptorsTypeDef FS_Desc;
-
-
-/* usbd_desc.h END ---- ---- ---- ---- ---- ---- ---- ---- */
-
-
 void Get_SerialNum(void);
 void IntToUnicode(uint32_t value, uint8_t * pbuf, uint8_t len);
-
 uint8_t * USBD_FS_DeviceDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
 uint8_t * USBD_FS_LangIDStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
 uint8_t * USBD_FS_ManufacturerStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
@@ -1109,17 +532,6 @@ uint8_t * USBD_FS_SerialStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
 uint8_t * USBD_FS_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
 uint8_t * USBD_FS_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
 
-
-/* Start of usbd_desc.h */
-#define         DEVICE_ID1          (UID_BASE)
-#define         DEVICE_ID2          (UID_BASE + 0x4)
-#define         DEVICE_ID3          (UID_BASE + 0x8)
-
-#define  USB_SIZ_STRING_SERIAL       0x1A
-
-extern USBD_DescriptorsTypeDef FS_Desc;
-
-/* End of usbd_desc.h */
 #endif /* __USB_CDC_DEVICE_H */
 
 

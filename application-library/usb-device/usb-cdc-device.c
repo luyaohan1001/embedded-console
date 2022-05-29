@@ -11,10 +11,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usb-cdc-device.h"
-// #include "usbd_desc.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal.h"
 
+char lcd_string[128] = {'\0'};
 
 #define USBD_VID     1155
 #define USBD_LANGID_STRING     1033
@@ -284,6 +284,7 @@ int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   memset (received_msg, '\0', 64);  // clear the buffer
   uint8_t len = (uint8_t)*Len;
   memcpy(received_msg, Buf, len);  // copy the data to the buffer
+  memcpy(lcd_string, Buf, len);  // copy the data to the buffer
 
   strcat((char*) received_msg, (char *)" echoed.\n");
   memset(Buf, '\0', len);   // clear the Buf also
@@ -359,7 +360,7 @@ uint8_t USBD_CDC_Init(USBD_Handle_t *p_usbd_instance, uint8_t cfgidx)
   UNUSED(cfgidx);
   USBD_CDC_Buffer_t *hcdc;
 
-  hcdc = (USBD_CDC_Buffer_t *)USBD_malloc(sizeof(USBD_CDC_Buffer_t));
+  hcdc = (USBD_CDC_Buffer_t *)USBD_static_malloc(sizeof(USBD_CDC_Buffer_t));
 
   if (hcdc == NULL)
   {
@@ -376,14 +377,12 @@ uint8_t USBD_CDC_Init(USBD_Handle_t *p_usbd_instance, uint8_t cfgidx)
   if (p_usbd_instance->dev_speed == USBD_SPEED_HIGH)
   {
     /* Open EP IN */
-    USBD_LL_OpenEP(p_usbd_instance, CDC_IN_EP, USBD_EP_TYPE_BULK,
-                         CDC_DATA_HS_IN_PACKET_SIZE);
+    USBD_LL_OpenEP(p_usbd_instance, CDC_IN_EP, USBD_EP_TYPE_BULK, CDC_DATA_HS_IN_PACKET_SIZE);
 
     p_usbd_instance->ep_in[CDC_IN_EP & 0xFU].is_used = 1U;
 
     /* Open EP OUT */
-    USBD_LL_OpenEP(p_usbd_instance, CDC_OUT_EP, USBD_EP_TYPE_BULK,
-                         CDC_DATA_HS_OUT_PACKET_SIZE);
+    USBD_LL_OpenEP(p_usbd_instance, CDC_OUT_EP, USBD_EP_TYPE_BULK, CDC_DATA_HS_OUT_PACKET_SIZE);
 
     p_usbd_instance->ep_out[CDC_OUT_EP & 0xFU].is_used = 1U;
 
@@ -394,14 +393,12 @@ uint8_t USBD_CDC_Init(USBD_Handle_t *p_usbd_instance, uint8_t cfgidx)
   else
   {
     /* Open EP IN */
-    USBD_LL_OpenEP(p_usbd_instance, CDC_IN_EP, USBD_EP_TYPE_BULK,
-                         CDC_DATA_FS_IN_PACKET_SIZE);
+    USBD_LL_OpenEP(p_usbd_instance, CDC_IN_EP, USBD_EP_TYPE_BULK, CDC_DATA_FS_IN_PACKET_SIZE);
 
     p_usbd_instance->ep_in[CDC_IN_EP & 0xFU].is_used = 1U;
 
     /* Open EP OUT */
-    USBD_LL_OpenEP(p_usbd_instance, CDC_OUT_EP, USBD_EP_TYPE_BULK,
-                         CDC_DATA_FS_OUT_PACKET_SIZE);
+    USBD_LL_OpenEP(p_usbd_instance, CDC_OUT_EP, USBD_EP_TYPE_BULK, CDC_DATA_FS_OUT_PACKET_SIZE);
 
     p_usbd_instance->ep_out[CDC_OUT_EP & 0xFU].is_used = 1U;
 
@@ -806,22 +803,15 @@ uint8_t USBD_CDC_RegisterInterface(USBD_Handle_t *p_usbd_instance,
   * @param  p_usbd_instance: device instance
   * @param  pbuff: Tx Buffer
   * @param  length: Tx Buffer length
-  * @retval status
+  * @retval None.
   */
-uint8_t USBD_CDC_SetTxBuffer(USBD_Handle_t *p_usbd_instance,
+void USBD_CDC_SetTxBuffer(USBD_Handle_t *p_usbd_instance,
                              uint8_t *pbuff, uint32_t length)
 {
   USBD_CDC_Buffer_t *hcdc = (USBD_CDC_Buffer_t *)p_usbd_instance->pClassDataCmsit;
 
-  if (hcdc == NULL)
-  {
-    return (uint8_t)USBD_FAIL;
-  }
-
   hcdc->TxBuffer = pbuff;
   hcdc->TxLength = length;
-
-  return (uint8_t)USBD_OK;
 }
 
 /**

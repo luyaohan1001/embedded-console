@@ -29,6 +29,7 @@ build/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  application-library/ili9341-lcd/ili9341.h \
+ application-library/ili9341-lcd/colors.h \
  application-library/nrf24/nrf24.h \
  application-library/usb-device/usb-cdc-device.h
 
@@ -97,6 +98,8 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
 
 application-library/ili9341-lcd/ili9341.h:
+
+application-library/ili9341-lcd/colors.h:
 
 application-library/nrf24/nrf24.h:
 
